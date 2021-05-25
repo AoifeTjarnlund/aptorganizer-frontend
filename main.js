@@ -7,15 +7,14 @@ for (i = 0; i < myNodelist.length; i++){
     span.appendChild(txt);
     myNodelist[i].appendChild(span);
 }
-
+ 
 var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++){
-    close[i].addEventListener = function() {
+    close[i].addEventListener("click", function() {
         let div = this.parentElement;
         div.style.display = "none";
-        console.log("hallå");
-    }
+    })
 }
 
 var list = document.querySelector('ul');
@@ -25,9 +24,11 @@ list.addEventListener('click', function(ev){
     }
 }, false);
 
-function newElement() {
+function newElement(inputValue) {
     var li = document.createElement("li");
-    var inputValue = document.getElementById("myInput").nodeValue;
+    if (inputValue === undefined){
+        inputValue = document.getElementById("myInput").value;
+    }
     var t = document.createTextNode(inputValue);
     li.appendChild(t);
     if (inputValue === ''){
@@ -36,18 +37,26 @@ function newElement() {
     else {
         document.getElementById("myUL").appendChild(li);
     }
+
     document.getElementById("myInput").value = "";
 
     var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\y00D7");
+    var txt = document.createTextNode("\u00D7");
     span.className = "close";
     span.appendChild(txt);
     li.appendChild(span);
 
-    for (i = 0; i < close.length; i++){
-        close[i].onclick = function(){
-            var div = this.parentElement;
-            div.style.display = "none";
-        }
-    }
+  
+    span.addEventListener("click", function(){
+        var div = this.parentElement;
+        div.style.display = "none";
+    })
+    
 }
+(async () => {
+    const komsi = await fetch("http://localhost:8080/message/all")
+    const sparad = await komsi.json()
+
+    for (i = 0; i < sparad.length; i++)
+        newElement(sparad[i].txt)
+})()
